@@ -1,8 +1,9 @@
 {
-  "name": "backend",
+  "name": "express_node_js",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -10,7 +11,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "body-parser": "^2.2.0",
+    "csv-stringify": "^6.5.2",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "lodash": "^4.17.21"
+    "firebase-admin": "^13.4.0",
+    "moment-timezone": "^0.6.0",
+    "mqtt": "^5.13.1"
   }
 }
