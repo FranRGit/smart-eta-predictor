@@ -1,32 +1,33 @@
-// src/app.js
-require('dotenv').config({path: '../../.env'}); // Cargar variables de entorno al inicio
+
+// 1. Cargar variables de entorno
+require('dotenv').config({ path: '../../.env' });
+require('./config/firebaseConfig'); 
+
+// 2. Dependencias principales
 const express = require('express');
 const bodyParser = require('body-parser');
-const { startMqttClient } = require('./services/mqttClienteService');
+const { startMqttClient } = require('./services/mqttService');
+
+// 3. Rutas
 const dataRoutes = require('./routes/dataRoutes');
 
-// Asegurar que Firebase se inicialice al inicio
-require('./config/firebaseConfig');
-
+// 4. Inicializar Express
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(bodyParser.json()); // Para parsear cuerpos JSON en peticiones HTTP
-app.use(bodyParser.urlencoded({ extended: true })); // Para parsear URLs codificadas
+// 5. Middlewares
+app.use(bodyParser.json());                           
+app.use(bodyParser.urlencoded({ extended: true }));   
 
-// Rutas
-app.use('/data', dataRoutes); // Prefijo /data para las rutas de datos
-
+// 6. Endpoints
 app.get('/', (req, res) => {
-  res.send('Backend del sistema de telemetría de buses en funcionamiento. Visita /data/export-dataset para generar el CSV.');
+  res.send('Backend del sistema de telemetría en funcionamiento.\n\n👉 Visita /data/export-dataset para generar el CSV.');
 });
+app.use('/data', dataRoutes); 
 
-// Iniciar el cliente MQTT
-startMqttClient();
+// 8. Iniciar servicios
+startMqttClient(); 
 
-// Iniciar el servidor Express
-app.listen(port, () => {
-  console.log(`Servidor Express escuchando en el puerto ${port}`);
-  console.log(`Accede a http://localhost:${port}/data/export-dataset para descargar el CSV.`);
+app.listen(PORT, () => {
+  console.log(`Servidor Express escuchando en http://localhost:${PORT}`);
 });

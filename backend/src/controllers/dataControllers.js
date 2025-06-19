@@ -5,7 +5,6 @@ const { getFirestoreDocument } = require('../services/firestoreService'); // Par
 async function exportDataset(req, res) {
     try {
         const rawData = await getCollectionData(process.env.FIRESTORE_RAW_COLLECTION, 'Tiempo_llegada');
-
         let dataset = await generateTrajectoriesDataset(rawData);
 
         dataset = dataset.map(record => {
