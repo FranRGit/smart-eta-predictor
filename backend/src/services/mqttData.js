@@ -58,8 +58,8 @@ async function procesarMensajeMQTT(data) {
 async function procesarUbicacionMQTT(data) {
     const {
         nombre,
-        latitud,
-        longitud,
+        lat,
+        lon,
         day,
         month,
         year,
@@ -71,16 +71,16 @@ async function procesarUbicacionMQTT(data) {
     const busid = nombre;
 
     try {
-        if (!busid || latitud === undefined || longitud === undefined) {
-            throw new Error(`Datos incompletos del mensaje MQTT. busid: ${busid}, lat: ${latitud}, lon: ${longitud}`);
+        if (!busid || lat === undefined || lon === undefined) {
+            throw new Error(`Datos incompletos del mensaje MQTT. busid: ${busid}, lat: ${lat}, lon: ${lon}`);
         }
 
         const fechaUbicacion = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
 
         const docData = {
             bus_id: busid,
-            latitud,
-            longitud,
+            lat,
+            lon,
             tiempo_ubicacion: fechaUbicacion.toISOString()
         };
 

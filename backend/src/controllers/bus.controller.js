@@ -78,10 +78,10 @@ async function getBusByID(req, res) {
 
 async function addBus(req, res) {
     //Mejorar añadir interfaz o validacion bus
-    const { id, name, rutaid } = req.body;
+    const { id, name, ruta } = req.body;
 
     try {
-        const newBus = await firestoreService.addBus({ id, name, rutaid });
+        const newBus = await firestoreService.addBus({ id, name, ruta });
         res.status(201).json({ message: 'Bus creado exitosamente', data: newBus });
     } catch (error) {
         console.error('Error al crear bus:', error.message);

@@ -1,6 +1,6 @@
 const { getCollectionData } = require('../services/firestoreService');
 const { generateTrajectoriesDataset, convertToCsv } = require('../services/dataProcessingService');
-const { getFirestoreDocument } = require('../services/firestoreService'); // Para las distancias
+const { getFirestoreDocument } = require('../services/firestoreService');
 
 async function exportDataset(req, res) {
     try {

@@ -4,8 +4,8 @@ const busController = require('../controllers/bus.controller');
 
 router.post('/arrive', busController.busArrival);
 router.post('/updateLocation', busController.updateBusLocation);
-router.get('/getBuses', busController.getAllBuses)
-router.get('/getBus/:id', busController.getBusByID);
-router.post('/addBus', busController.addBus);
+router.get('/', busController.getAllBuses)
+router.get('/:id', busController.getBusByID);
+router.post('/add', busController.addBus);
 
 module.exports = router;

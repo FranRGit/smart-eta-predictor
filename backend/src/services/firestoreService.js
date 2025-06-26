@@ -31,10 +31,10 @@ async function getBusByID(busId) {
 }
 
 async function addBus(busData) {
-    const { id, name, rutaid } = busData;
+    const { id, name, ruta } = busData;
 
     try {
-        const rutaRef = db.collection('rutas').doc(rutaid);
+        const rutaRef = db.collection('rutas').doc(ruta);
         const rutaDoc = await rutaRef.get();
 
         if (!rutaDoc.exists) {
@@ -46,7 +46,7 @@ async function addBus(busData) {
         ruta: rutaRef 
         });
 
-        return { id, name, rutaid };
+        return { id, name, ruta};
     } catch (error) {
         throw error;
     }
@@ -111,33 +111,17 @@ async function addParadero(paraderoData) {
 async function getAllParaderos() {
     try {
         const snapshot = await db.collection('paradero').get();
-        const paraderos = [];
-
-        for (const doc of snapshot.docs) {
-        const data = doc.data();
-        const rutasRefs = data.rutas || [];
-
-        // Obtener cada ruta referenciada
-        const rutas = [];
-        for (const ref of rutasRefs) {
-            const rutaSnap = await ref.get();
-            if (rutaSnap.exists) {
-            rutas.push({
-                id: rutaSnap.id,
-                ...rutaSnap.data()
-            });
-            }
-        }
-
-        paraderos.push({
-            id: doc.id,
-            name: data.name,
-            rutas
+        const paraderos = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                name: data.name || '' 
+            };
         });
-        }
 
         return paraderos;
     } catch (error) {
+        console.error('[FirestoreService] Error al obtener paraderos:', error.message);
         throw error;
     }
 }
