@@ -10,6 +10,10 @@ const { startMqttClient } = require('./services/mqttService');
 
 // 3. Rutas
 const dataRoutes = require('./routes/dataRoutes');
+const busRoutes = require('./routes/busRoutes');
+const rutaRoutes = require('./routes/rutaRoutes');
+const paraderoRoutes = require('./routes/paraderoRoutes');
+const mqttTest = require('./routes/mqtttest');
 
 // 4. Inicializar Express
 const app = express();
@@ -24,6 +28,10 @@ app.get('/', (req, res) => {
   res.send('Backend del sistema de telemetría en funcionamiento.\n\n👉 Visita /data/export-dataset para generar el CSV.');
 });
 app.use('/data', dataRoutes); 
+app.use('/bus', busRoutes); 
+app.use('/ruta', rutaRoutes); 
+app.use('/paradero', paraderoRoutes); 
+app.use('/mqtt', mqttTest); 
 
 // 8. Iniciar servicios
 startMqttClient(); 
