@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
 import os
+import joblib
 
 # =============================================================================
 # CONFIGURACIÓN INICIAL
@@ -48,7 +49,7 @@ def cargar_dataset(ruta_archivo):
         return None
 
 # CAMBIAR ESTA RUTA POR LA UBICACIÓN DE TU ARCHIVO CSV
-RUTA_CSV = "C:/Users/braya/Downloads/DATA_ENTRENAMIENTO.csv"  # ← Tu archivo real
+RUTA_CSV = "C:\\Users\\USUARIO\\Complementos\\Proyectos\\UNMSM Code\\smart-eta-predictor\\data\\datasetV1.csv"
 
 # Cargar el dataset
 print("Cargando dataset...")
@@ -100,7 +101,7 @@ print("\nValores nulos por columna:")
 print(df.isnull().sum())
 
 # =============================================================================
-# PASO 1: NORMALIZACIÓN DE DATOS
+# PASO 1: PREPARACION DE DATOS
 # =============================================================================
 
 # Crear una copia para trabajar
@@ -301,6 +302,7 @@ if best_model is None:
 
 print(f"\nMejor kernel: {best_kernel} (R² = {best_score:.4f})")
 
+
 # =============================================================================
 # PASO 6: EVALUACIÓN FINAL
 # =============================================================================
@@ -322,7 +324,7 @@ print(f"Coeficiente de Determinación (R²): {final_r2:.4f}")
 print(f"Error Absoluto Medio (MAE): {final_mae:.4f}")
 print(f"RMSE: {np.sqrt(final_mse):.4f}")
 
-# =============================================================================
+# =======================================================sti======================
 # PASO 7: VISUALIZACIONES
 # =============================================================================
 
@@ -389,7 +391,7 @@ crear_visualizaciones()
 # PASO 8: FUNCIÓN DE PREDICCIÓN INTEGRADA
 # =============================================================================
 
-def predecir_duracion(stop_name, time_str, date_str, weather, peak):
+def predecir_duracion(stop_inicio, stop_final, time_str, date_str, weather, peak):
     """
     Función para hacer predicciones individuales
     
@@ -406,7 +408,7 @@ def predecir_duracion(stop_name, time_str, date_str, weather, peak):
     
     try:
         # Extraer número de parada
-        stop_num = int(stop_name.replace('P', ''))
+        stop_num = int(stop_inicio.replace('P', ''))
         
         # Calcular siguiente parada
         next_stop = 0 if stop_num == 23 else stop_num + 1

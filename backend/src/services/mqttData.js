@@ -15,14 +15,15 @@ async function procesarMensajeMQTT(data) {
 
     const busid = nombre;
     const paraderoid = paradero;
+    console.log(data)
 
     try {
         if (!busid || !paraderoid) {
             throw new Error(`Datos incompletos del mensaje MQTT. busid: ${busid}, paraderoid: ${paraderoid}`);
         }
 
-        const busRef = db.collection('buses').doc(busid);
-        const paraderoRef = db.collection('paradero').doc(paraderoid);
+        const busRef = db.collection('buses').doc(String(busid));
+        const paraderoRef = db.collection('paradero').doc(String(paraderoid));
 
         const busSnap = await busRef.get();
         if (!busSnap.exists) throw new Error('Bus no encontrado');
@@ -37,16 +38,16 @@ async function procesarMensajeMQTT(data) {
         const docData = {
             bus_id: busid,
             paradero_id: paraderoid,
-            ruta_id: rutaRef.id,
+            ruta_id: rutaRef.id, //OJO
             tiempo_llegada: fechaLlegada.toISOString(),
-            clima: "", 
-            dia: "",
+            clima: "",  //OJO
+            dia: "", //OJO
             hora_pico: false,
             latitud: null, //OJO
             longitud: null, //OJO
-            tipo_dia: ""
+            tipo_dia: "" //OJO
         };
-
+        console.log(docData)
         const docRef = await firestoreService.saveBusArrival("buses-arrivals", docData);
         console.log(`[MQTT] Datos guardados en Firebase con ID: ${docRef.id}`);
         
@@ -69,9 +70,10 @@ async function procesarUbicacionMQTT(data) {
     } = data;
 
     const busid = nombre;
+    console.log(data)
 
     try {
-        if (!busid || lat === undefined || lon === undefined) {
+        if (lat === undefined || lon === undefined) {
             throw new Error(`Datos incompletos del mensaje MQTT. busid: ${busid}, lat: ${lat}, lon: ${lon}`);
         }
 
@@ -84,6 +86,7 @@ async function procesarUbicacionMQTT(data) {
             tiempo_ubicacion: fechaUbicacion.toISOString()
         };
 
+        console.log(docData)
         const docRef = await firestoreService.updateBusLocation("bus-locations", docData);
         console.log(`[MQTT] Ubicación guardada en Firebase con ID: ${docRef.id}`);
 

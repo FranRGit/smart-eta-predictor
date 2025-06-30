@@ -9,12 +9,11 @@ const bodyParser = require('body-parser');
 const { startMqttClient } = require('./services/mqttService');
 
 // 3. Rutas
-const dataRoutes = require('./routes/dataRoutes');
 const busRoutes = require('./routes/busRoutes');
 const rutaRoutes = require('./routes/rutaRoutes');
 const paraderoRoutes = require('./routes/paraderoRoutes');
 const mqttTest = require('./routes/mqtttest');
-
+const modelo = require('./routes/modelRoutes')
 // 4. Inicializar Express
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,12 +26,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.send('Backend del sistema de telemetría en funcionamiento.\n\n👉 Visita /data/export-dataset para generar el CSV.');
 });
-app.use('/data', dataRoutes); 
+
 app.use('/bus', busRoutes); 
 app.use('/ruta', rutaRoutes); 
 app.use('/paradero', paraderoRoutes); 
 app.use('/mqtt', mqttTest); 
-
+app.use('/modelo', modelo)
 // 8. Iniciar servicios
 startMqttClient(); 
 

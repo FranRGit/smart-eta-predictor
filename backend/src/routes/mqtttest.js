@@ -9,8 +9,8 @@
     }
 
     const testData = {
-        nombre: "B-001",
-        paradero: "P-001",
+        nombre: 1,
+        paradero: 2,
         day: 19,
         month: 6,
         year: 2025,
@@ -19,7 +19,7 @@
         second: 0
     };
 
-    client.publish(process.env.MQTT_TOPIC2, JSON.stringify(testData), {}, (err) => {
+    client.publish(process.env.MQTT_TOPIC1, JSON.stringify(testData), {}, (err) => {
         if (err) {
         console.error('❌ Error al publicar en MQTT:', err.message);
         return res.status(500).json({ message: 'Error al publicar' });
@@ -38,9 +38,9 @@ router.get('/test-mqtt-ubicacion', (req, res) => {
     }
 
     const testData = {
-        nombre: "B-001",
-        latitud: -12.0464,
-        longitud: -77.0428,
+        nombre: 1,
+        lat: -12.0464,
+        lon: -77.0428,
         day: 26,
         month: 6,
         year: 2025,
@@ -49,7 +49,7 @@ router.get('/test-mqtt-ubicacion', (req, res) => {
         second: 30
     };
 
-    client.publish("bus/ubicacion", JSON.stringify(testData), {}, (err) => {
+    client.publish(process.env.MQTT_TOPIC2, JSON.stringify(testData), {}, (err) => {
         if (err) {
             console.error('❌ Error al publicar en MQTT:', err.message);
             return res.status(500).json({ message: 'Error al publicar' });

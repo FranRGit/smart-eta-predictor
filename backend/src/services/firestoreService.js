@@ -180,7 +180,7 @@ async function updateBusLocation(collectionName, docData) {
             throw new Error("Falta el campo 'bus_id' en docData");
         }
 
-        const docRef = db.collection(collectionName).doc(bus_id); // Usa el bus_id como ID de documento
+        const docRef = db.collection(collectionName).doc(String(bus_id));
         await docRef.set(docData, { merge: true }); // Crea o actualiza
 
         console.log(`[FirestoreService] Ubicación de bus ${bus_id} actualizada correctamente.`);

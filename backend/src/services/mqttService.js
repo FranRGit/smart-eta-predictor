@@ -1,18 +1,19 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const { procesarMensajeMQTT, procesarUbicacionMQTT } = require('./mqttData');
 
 const mqtt = require('mqtt');
 
 let client;
 
-function startMqttClient(){
+async function startMqttClient(){
     const options={
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD,
     port: process.env.MQTT_PORT,
     protocol: 'mqtts'
 }
-    client = mqtt.connect(process.env.MQTT_HOST, options); //Crear cliente
+
+    client = mqtt.connect(process.env.MQTT_HOST, options); 
 
     client.on('connect', () => {
         console.log(`Conectado a HiveMQ broker`)
@@ -54,7 +55,7 @@ function startMqttClient(){
     });
 
     client.on('error', (error) => {
-        console.error('Error de conexión MQTT:', error.message);
+        console.error('Error de conexión MQTT:', error);
     });    
 }
 
