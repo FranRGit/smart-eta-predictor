@@ -54,10 +54,10 @@ async function obtenerPrediccionesParaParadero(paraderoId) {
         });
 
         predicciones.push({
-            ruta_id: rutaId,
-            tiempo_estimado: tiempoEstimado,
-            bus_id: busId,
-            paradero_actual: ultimo_stop
+            ruta_id: parseInt(rutaId),
+            tiempo_estimado: parseFloat(tiempoEstimado),
+            bus_id: parseInt(busId),
+            paradero_actual: parseInt(ultimo_stop)
         });
     }
 

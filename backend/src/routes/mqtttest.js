@@ -62,7 +62,7 @@ router.get('/test-mqtt-ubicacion', (req, res) => {
 
 
 const RUTA_ID = "R-001";
-const paraderos = ["1", "2", "3", "5","10"];
+const paraderos = ["1", "2", "3", "4","5"];
 const INTERVALO_MS = 5000;
 
 function crearMensaje(busId, paraderoId) {
@@ -81,9 +81,11 @@ function crearMensaje(busId, paraderoId) {
 
 
 const pasos = [
-    { busId: "1", paraderoIndex: 0 }, // BUS 1 → P1
-    { busId: "1", paraderoIndex: 1 }, // BUS 1 → P2
-    { busId: "1", paraderoIndex: 2 }, // BUS 1 → P3
+    { busId: "2", paraderoIndex: 0 }, // BUS 1 → P1
+    { busId: "2", paraderoIndex: 1 }, // BUS 1 → P2
+    { busId: "2", paraderoIndex: 2 }, // BUS 1 → P3
+    { busId: "2", paraderoIndex: 3 }, // BUS 1 → P3
+    { busId: "2", paraderoIndex: 4 }, // BUS 1 → P3
 ];
 
 

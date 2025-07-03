@@ -8,6 +8,7 @@ async function predictETA(req, res) {
     try {
         const resultados = await predictService.obtenerPrediccionesParaParadero(paradero_id);
         res.json(resultados);
+        console.log(resultados)
     } catch (error) {
         console.error('[Predicciones] Error:', error.message);
         res.status(500).json({ error: 'Error al calcular predicciones' });

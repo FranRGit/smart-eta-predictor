@@ -28,9 +28,11 @@ def predecir_duracion(stop_inicio, stop_fin, time_str, date_str, weather, peak):
             'weather': weather,
             'peak': peak
         }])
-
+        print(entrada)
         entrada_scaled = modelo_completo["scaler"].transform(entrada)
+        print("Escalando")
         prediccion = modelo_completo["modelo"].predict(entrada_scaled)
+        print("prediccion")
 
         return round(float(prediccion[0]), 2)
     

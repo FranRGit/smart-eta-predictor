@@ -21,7 +21,7 @@ async function addParadero(req, res) {
 async function getAllParaderos(req, res) {
     try {
         const paraderos = await firestoreService.getAllParaderos();
-        res.status(200).json({data: paraderos });
+        res.status(200).json(paraderos);
     } catch (error) {
         console.error('Error fetching paraderos:', error);
         res.status(500).json({message: 'Error getting paraderos' });
