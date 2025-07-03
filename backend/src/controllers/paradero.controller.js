@@ -1,16 +1,16 @@
 const firestoreService = require('../services/firestoreService');
 
 async function addParadero(req, res) {
-    const { id, name, rutas } = req.body;
+    const { id, name,latitud,longitud, rutas } = req.body;
 
-    if (!id || !name || !Array.isArray(rutas) || rutas.length === 0) {
+    if (!id || !name || !latitud || !longitud || !Array.isArray(rutas) || rutas.length === 0) {
         return res.status(400).json({
         message: 'Faltan campos requeridos: id, name y rutas[]'
         });
     }
 
     try {
-        const nuevoParadero = await firestoreService.addParadero({ id, name, rutas });
+        const nuevoParadero = await firestoreService.addParadero({ id, name, latitud, longitud, rutas });
         res.status(201).json({ message: 'Paradero creado correctamente', data: nuevoParadero });
     } catch (error) {
         console.error('Error al crear paradero:', error.message);

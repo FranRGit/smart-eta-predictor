@@ -10,11 +10,11 @@
 
     const testData = {
         nombre: 1,
-        paradero: 2,
+        paradero: 1,
         day: 19,
         month: 6,
         year: 2025,
-        hour: 15,
+        hour: 17,
         minute: 30,
         second: 0
     };
@@ -44,7 +44,7 @@ router.get('/test-mqtt-ubicacion', (req, res) => {
         day: 26,
         month: 6,
         year: 2025,
-        hour: 16,
+        hour: 17,
         minute: 45,
         second: 30
     };
@@ -58,6 +58,68 @@ router.get('/test-mqtt-ubicacion', (req, res) => {
         console.log('✅ Mensaje MQTT de ubicación enviado');
         res.status(200).json({ message: 'Mensaje MQTT enviado con éxito', data: testData });
     });
+});
+
+
+const RUTA_ID = "R-001";
+const paraderos = ["1", "2", "3", "5","10"];
+const INTERVALO_MS = 5000;
+
+function crearMensaje(busId, paraderoId) {
+    const now = new Date();
+    return {
+        nombre: String(busId),
+        paradero: String(paraderoId),
+        day: now.getDate(),
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+        second: now.getSeconds()
+    };
+}
+
+
+const pasos = [
+    { busId: "1", paraderoIndex: 0 }, // BUS 1 → P1
+    { busId: "1", paraderoIndex: 1 }, // BUS 1 → P2
+    { busId: "1", paraderoIndex: 2 }, // BUS 1 → P3
+];
+
+
+router.get('/simulacion', (req, res) => {
+    const client = getClient();
+    if (!client || !client.connected) {
+        return res.status(500).json({ message: 'MQTT no conectado' });
+    }
+
+    let pasoActual = 0;
+
+    const intervalId = setInterval(() => {
+        if (pasoActual >= pasos.length) {
+            clearInterval(intervalId);
+            console.log("🏁 Simulación finalizada.");
+            return;
+        }
+
+        const { busId, paraderoIndex } = pasos[pasoActual];
+        const paraderoId = paraderos[paraderoIndex];
+
+        const data = crearMensaje(busId, paraderoId);
+        const json = JSON.stringify(data);
+
+        client.publish(process.env.MQTT_TOPIC1, json, {}, (err) => {
+            if (err) {
+                console.error(`Error MQTT ${busId} → ${paraderoId}:`, err.message);
+            } else {
+                console.log(`BUS ${busId} llegó a PARADERO ${paraderoId}`);
+            }
+        });
+
+        pasoActual++;
+    }, INTERVALO_MS);
+
+    res.status(200).json({ message: 'Simulación iniciada' });
 });
 
 

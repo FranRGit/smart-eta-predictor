@@ -1,99 +1,105 @@
-const firestoreService = require('./firestoreService'); 
-const { db, admin } = require('../config/firebaseConfig');
+const { db } = require('../config/firebaseConfig');
+const { COLLECTIONS } = require('../constants/colecctions');
+const busController = require('../controllers/bus.controller');
+const { esHoraPico, obtenerNombreDia, determinarTipoDia } = require('../utils/tiempo');
+const { construirDocData, construirFecha, obtenerReferencias} = require('../utils/helpers');
+
+const { obtenerClima } = require('../services/climaService');
+
+/**
+ * Procesa un mensaje MQTT relacionado a la llegada de un bus a un paradero.
+ * 
+ * Pasos:
+ * - Verifica datos mínimos (bus y paradero)
+ * - Obtiene la referencia del bus, ruta y paradero
+ * - Construye el objeto de fecha/hora
+ * - Determina si es hora pico, día de la semana y tipo de día
+ * - Consulta el clima en el paradero
+ * - Arma y guarda el documento en Firestore
+ * 
+ * @param {Object} data - Mensaje MQTT con información del evento
+ */
 
 async function procesarMensajeMQTT(data) {
-    const {
-        nombre,       
-        paradero,  
-        day,
-        month,
-        year,
-        hour,
-        minute,
-        second
-    } = data;
-
-    const busid = nombre;
-    const paraderoid = paradero;
+    const { nombre: busid, paradero: paraderoid, day, month, year, hour, minute, second } = data;
     console.log(data)
-
     try {
-        if (!busid || !paraderoid) {
-            throw new Error(`Datos incompletos del mensaje MQTT. busid: ${busid}, paraderoid: ${paraderoid}`);
-        }
+        if (!busid || !paraderoid) throw new Error(`Datos incompletos`);
 
-        const busRef = db.collection('buses').doc(String(busid));
-        const paraderoRef = db.collection('paradero').doc(String(paraderoid));
+        const fecha = construirFecha({ day, month, year, hour, minute, second });
+        const fechaStr = fecha.toISOString();
 
-        const busSnap = await busRef.get();
-        if (!busSnap.exists) throw new Error('Bus no encontrado');
+        const { rutaRef, rutaData, paraderoData } = await obtenerReferencias(busid, paraderoid);
 
-        const busData = busSnap.data();
-        const rutaRef = busData.ruta;
-        const rutaSnap = await rutaRef.get();
-        if (!rutaSnap.exists) throw new Error('Ruta del bus no encontrada');
-
-        const fechaLlegada = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+        const nombreDia = obtenerNombreDia(fecha);
+        const tipo_dia = determinarTipoDia(fecha);
+        const hora_pico = esHoraPico(fechaStr, rutaData.hora_pico || []);
+        const clima = await obtenerClima(paraderoData.latitud, paraderoData.longitud);
 
         const docData = {
-            bus_id: busid,
-            paradero_id: paraderoid,
-            ruta_id: rutaRef.id, //OJO
-            tiempo_llegada: fechaLlegada.toISOString(),
-            clima: "",  //OJO
-            dia: "", //OJO
-            hora_pico: false,
-            latitud: null, //OJO
-            longitud: null, //OJO
-            tipo_dia: "" //OJO
-        };
+            bus_id: String(busid),
+            paradero_id: String(paraderoid),
+            ruta_id: String(rutaRef.id),
+            tiempo_llegada: fechaStr,
+            clima: clima,
+            dia: nombreDia,
+            hora_pico: hora_pico,
+            latitud: paraderoData.latitud,
+            longitud: paraderoData.longitud,
+            tipo_dia: tipo_dia
+        }
         console.log(docData)
-        const docRef = await firestoreService.saveBusArrival("buses-arrivals", docData);
-        console.log(`[MQTT] Datos guardados en Firebase con ID: ${docRef.id}`);
-        
+        await busController.busArrival(docData);
+        console.log(`[MQTT] Datos guardados.`);
+
     } catch (error) {
-        console.error('[MQTT] Error al guardar datos:', error.message);
+        console.error('[MQTT] Error:', error.message);
     }
 }
 
+/**
+ * Procesa un mensaje MQTT con información de ubicación en tiempo real de un bus.
+ * 
+ * Pasos:
+ * - Verifica si latitud y longitud están presentes
+ * - Construye el objeto de fecha/hora
+ * - Arma el documento y actualiza Firestore
+ * 
+ * @param {Object} data - Mensaje MQTT con ubicación GPS
+ */
 async function procesarUbicacionMQTT(data) {
     const {
-        nombre,
-        lat,
-        lon,
-        day,
-        month,
-        year,
-        hour,
-        minute,
-        second
+        nombre: busid,
+        lat, lon,
+        day, month, year,
+        hour, minute, second
     } = data;
 
-    const busid = nombre;
-    console.log(data)
+    if (lat === undefined || lon === undefined) {
+        console.error(`[MQTT] Datos incompletos de ubicación: busid: ${busid}, lat: ${lat}, lon: ${lon}`);
+        return;
+    }
 
     try {
-        if (lat === undefined || lon === undefined) {
-            throw new Error(`Datos incompletos del mensaje MQTT. busid: ${busid}, lat: ${lat}, lon: ${lon}`);
-        }
-
         const fechaUbicacion = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
-
         const docData = {
-            bus_id: busid,
-            lat,
-            lon,
-            tiempo_ubicacion: fechaUbicacion.toISOString()
+            bus_id: String(busid),
+            location : {
+                lat,
+                lon,
+                tiempo_ubicacion: fechaUbicacion.toISOString()
+            }
         };
-
         console.log(docData)
-        const docRef = await firestoreService.updateBusLocation("bus-locations", docData);
-        console.log(`[MQTT] Ubicación guardada en Firebase con ID: ${docRef.id}`);
-
+        await busController.updateBusLocation(docData);
+        console.log(`[MQTT] Ubicación guardada en Firebase.`);
     } catch (error) {
         console.error('[MQTT] Error al guardar ubicación:', error.message);
     }
 }
 
 
-module.exports = { procesarMensajeMQTT, procesarUbicacionMQTT };
+module.exports = {
+    procesarMensajeMQTT,
+    procesarUbicacionMQTT
+};

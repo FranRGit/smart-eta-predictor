@@ -9,8 +9,10 @@ modelo_completo = joblib.load("modelo_svr.pkl")
 
 def predecir_duracion(stop_inicio, stop_fin, time_str, date_str, weather, peak):
     try:
-        hora, minuto, segundo = map(int, time_str.split(':'))
-        mes, dia, año = map(int, date_str.split('/'))
+        hora, minuto = map(int, time_str.split(':'))
+        segundo = 0  # si time viene como HH:MM, poner 0
+
+        año, mes, dia = map(int, date_str.split('-'))
         dia_semana = datetime(año, mes, dia).weekday()
 
         entrada = pd.DataFrame([{
@@ -25,11 +27,13 @@ def predecir_duracion(stop_inicio, stop_fin, time_str, date_str, weather, peak):
             'dia_semana': dia_semana,
             'weather': weather,
             'peak': peak
-        }])        
+        }])
+
         entrada_scaled = modelo_completo["scaler"].transform(entrada)
         prediccion = modelo_completo["modelo"].predict(entrada_scaled)
-        
+
         return round(float(prediccion[0]), 2)
     
     except Exception as e:
+        print("❌ Error en la predicción:", str(e))
         raise ValueError(f"Error en la predicción: {e}")

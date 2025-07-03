@@ -14,6 +14,8 @@ const rutaRoutes = require('./routes/rutaRoutes');
 const paraderoRoutes = require('./routes/paraderoRoutes');
 const mqttTest = require('./routes/mqtttest');
 const modelo = require('./routes/modelRoutes')
+const predictETA = require('./routes/predict-etaRoutes')
+
 // 4. Inicializar Express
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +34,8 @@ app.use('/ruta', rutaRoutes);
 app.use('/paradero', paraderoRoutes); 
 app.use('/mqtt', mqttTest); 
 app.use('/modelo', modelo)
+app.use('/predict-eta', predictETA)
+
 // 8. Iniciar servicios
 startMqttClient(); 
 

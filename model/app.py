@@ -16,7 +16,7 @@ def predecir():
             int(data['weather']),
             int(data['peak'])
         )
-        return jsonify({"duracion_segundos": resultado})
+        return jsonify({resultado})
     
     except Exception as e:
         return jsonify({"error": str(e)}), 400
