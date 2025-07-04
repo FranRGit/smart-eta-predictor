@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\Hogar\\.gradle\\daemon\\8.12\\com.example.gpsmqttsender.app-merged_res-30:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\Hogar\\.gradle\\daemon\\8.12\\com.example.gpsmqttsender.app-main-32:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "com.example.gpsmqttsender.app-merged_res-30:/xml_network_security_config.xml.flat",
+        "source": "com.example.gpsmqttsender.app-main-32:/xml/network_security_config.xml"
+    }
+]

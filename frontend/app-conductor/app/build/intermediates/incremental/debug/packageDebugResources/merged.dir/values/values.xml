@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GPS MQTT Sender</string>
+    <string name="btn_start">Iniciar</string>
+    <string name="btn_stop">Detener</string>
+    <string name="client_mqtt_null">Cliente MQTT nulo. ¿Se conectó correctamente?</string>
+    <string name="error_mqtt_cannot_start">No se pudo iniciar servicio. Revisa permisos o el estado del Wi-Fi.</string>
+    <string name="error_mqtt_closed">Cliente MQTT cerrado inesperadamente. Intenta de nuevo.</string>
+    <string name="error_mqtt_generic">Fallo MQTT: %1$s</string>
+    <string name="error_mqtt_publish">Error al publicar MQTT: %1$s</string>
+    <string name="error_mqtt_refused">Conexión rechazada. El ESP32 aún no inició el broker MQTT o la IP está mal.</string>
+    <string name="error_mqtt_unknown_host">No se pudo resolver la IP del broker. Verifica la IP y Wi-Fi.</string>
+    <string name="error_mqtt_unreachable">Red inalcanzable. Verifica que estés conectado al Wi-Fi del bus.</string>
+    <string name="status_location_started">Enviando ubicación…</string>
+    <string name="status_mqtt_connected">Conectado al ESP32 por MQTT</string>
+    <string name="status_mqtt_failed">Fallo al conectar por MQTT</string>
+    <string name="status_mqtt_failed_with_reason">Fallo al conectar por MQTT: %1$s</string>
+    <string name="status_mqtt_not_connected">MQTT no conectado</string>
+    <string name="status_mqtt_sent">Enviado por MQTT: %1$s</string>
+    <string name="status_not_connected">No conectado al servidor</string>
+    <string name="status_requesting_permissions">Solicitando permisos...</string>
+    <string name="status_sending_started">Enviando ubicación...</string>
+    <string name="status_stopped">Envío detenido</string>
+</resources>

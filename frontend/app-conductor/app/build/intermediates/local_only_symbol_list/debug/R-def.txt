@@ -1,0 +1,28 @@
+R_DEF: Internal format may change without notice
+local
+id btnStart
+id btnStop
+id txtStatus
+layout activity_main
+string app_name
+string btn_start
+string btn_stop
+string client_mqtt_null
+string error_mqtt_cannot_start
+string error_mqtt_closed
+string error_mqtt_generic
+string error_mqtt_publish
+string error_mqtt_refused
+string error_mqtt_unknown_host
+string error_mqtt_unreachable
+string status_location_started
+string status_mqtt_connected
+string status_mqtt_failed
+string status_mqtt_failed_with_reason
+string status_mqtt_not_connected
+string status_mqtt_sent
+string status_not_connected
+string status_requesting_permissions
+string status_sending_started
+string status_stopped
+xml network_security_config

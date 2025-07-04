@@ -1,0 +1,4 @@
+#Mon Jun 16 12:59:16 PET 2025
+base.0=C\:\\Users\\Hogar\\Documents\\Android Studio\\GpsMqtt\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\0\\classes.dex
+path.0=0/classes.dex
+renamed.0=classes.dex
